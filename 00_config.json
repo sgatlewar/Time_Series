@@ -1,0 +1,3367 @@
+{
+  "auto_tune": {},
+  "auto_tune_flag": false,
+  "client_id": "trueclassic",
+  "country": "US",
+  "data_points": 380,
+  "date_column": "event_datetime",
+  "download_latest_data": false,
+  "env": "prod",
+  "filter_dates_between": {
+    "max": null,
+    "min": "20230613"
+  },
+  "filter_rows_to": {
+    "app_id": "APP-0001"
+  },
+  "force_rca": true,
+  "frequency": "d",
+  "hide_last_day_to_prophet": true,
+  "historical_filter": {
+    "max": null,
+    "min": "20230613"
+  },
+  "historical_flag": false,
+  "kpis": {
+    "avg_session_duration_mins": {
+      "accent": "positive",
+      "aggregation_operation": "round(avg(session_time_ms)/60000,2)",
+      "dimensions": {
+        "country_name": {
+          "display_name": "Country",
+          "id": "3fe9731f-db90-47fd-8470-1cbae3f55ae6",
+          "name": "country_name",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "state": {
+          "display_name": "State",
+          "id": "670230de-8e32-4b21-96b2-0032e3488bda",
+          "name": "state",
+          "parent_dim_name": "country_name"
+        }
+      },
+      "display_name": "Avg Session Duration (mins)",
+      "id": "0a823e5d-597f-447e-b4b5-79edc33b5c1f",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "avg_session_duration_mins",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.48
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "gmv": {
+      "accent": "positive",
+      "aggregation_operation": "sum(case when data_order_id is not null then cast(data_value as double) else 0 end)",
+      "dimensions": {
+        "country_name": {
+          "display_name": "Country",
+          "id": "3fe9731f-db90-47fd-8470-1cbae3f55ae6",
+          "name": "country_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "state": {
+          "display_name": "State",
+          "id": "670230de-8e32-4b21-96b2-0032e3488bda",
+          "name": "state",
+          "parent_dim_name": "country_name"
+        }
+      },
+      "display_name": "GMV",
+      "id": "b5622dad-d92e-42d2-aeef-b2975e33eecd",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "gmv",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.73
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_ad_clicks": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when referrer_by_category = 'Ad Campaigns' then coalesce(search_fbclid,search_gclid,clickid) else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "search_utm_medium": {
+          "display_name": "Search UTM Medium",
+          "id": "6cd488f3-fd79-4b60-a0c4-436cfd7c5c8f",
+          "name": "search_utm_medium",
+          "parent_dim_name": null
+        },
+        "search_utm_source": {
+          "display_name": "Search UTM Source",
+          "id": "bc314d95-f404-47b8-b0ea-6b681ac3766d",
+          "name": "search_utm_source",
+          "parent_dim_name": "search_utm_medium"
+        }
+      },
+      "display_name": "Total Ads Clicks",
+      "id": "e4f1e1bb-cd0d-4278-ac5b-4bb9e83280b3",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_ad_clicks",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.9
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_addpaymentinfo": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'AddPaymentInfo' and regexp_like(page, '^.*(payment).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Add Payment Info",
+      "id": "6d400b9e-af52-45ed-b6fb-c08d6caaebe8",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_addpaymentinfo",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.73
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_addshippinginfo": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'AddShippingInfo' and regexp_like(page, '^.*(shipping).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Add Shipping Info",
+      "id": "582db0b6-6685-4a52-9e73-2bbb0731d13a",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_addshippinginfo",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.58
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_addtocarts": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'AddToCart' and regexp_like(page, '^.*(products|product).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Add to Cart",
+      "id": "c3d69f9c-47ab-41d1-b14c-20796b934bb0",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_addtocarts",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.29
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_blog_page_view": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'PageView' and regexp_like(page_path , '^.*(blog).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Blog Page Views",
+      "id": "50fe4ac3-7438-4d13-9842-7e3c1abc0be4",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_blog_page_view",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.07
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_collection_page_views": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'PageView' and regexp_like(page, '^.*(collection|collections).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Collection Page Views",
+      "id": "9046e8f0-d1c3-4d80-aec3-8635d57f0326",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_collection_page_views",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.07
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_cpc_clicks": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when referrer_by_type in ('cpc','cpc#btn-buy-now') then coalesce(search_fbclid,search_gclid,clickid) else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "search_utm_medium": {
+          "display_name": "Search UTM Medium",
+          "id": "6cd488f3-fd79-4b60-a0c4-436cfd7c5c8f",
+          "name": "search_utm_medium",
+          "parent_dim_name": null
+        },
+        "search_utm_source": {
+          "display_name": "Search UTM Source",
+          "id": "bc314d95-f404-47b8-b0ea-6b681ac3766d",
+          "name": "search_utm_source",
+          "parent_dim_name": "search_utm_medium"
+        }
+      },
+      "display_name": "Total CPC Clicks",
+      "id": "7599cb23-3d02-4f7d-a80b-bc8421b72a74",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_cpc_clicks",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.58
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_external_clicks": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct clickid)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "search_utm_medium": {
+          "display_name": "Search UTM Medium",
+          "id": "6cd488f3-fd79-4b60-a0c4-436cfd7c5c8f",
+          "name": "search_utm_medium",
+          "parent_dim_name": null
+        },
+        "search_utm_source": {
+          "display_name": "Search UTM Source",
+          "id": "bc314d95-f404-47b8-b0ea-6b681ac3766d",
+          "name": "search_utm_source",
+          "parent_dim_name": "search_utm_medium"
+        }
+      },
+      "display_name": "Total External Clicks",
+      "id": "446dc6f7-2614-4c90-9230-069506b23207",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_external_clicks",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.93
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_fb_search_clicks": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct search_fbclid)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "search_utm_medium": {
+          "display_name": "Search UTM Medium",
+          "id": "6cd488f3-fd79-4b60-a0c4-436cfd7c5c8f",
+          "name": "search_utm_medium",
+          "parent_dim_name": null
+        },
+        "search_utm_source": {
+          "display_name": "Search UTM Source",
+          "id": "bc314d95-f404-47b8-b0ea-6b681ac3766d",
+          "name": "search_utm_source",
+          "parent_dim_name": "search_utm_medium"
+        }
+      },
+      "display_name": "Total FB Search Clicks",
+      "id": "16978074-bfd4-4a47-8011-0c612adbce52",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_fb_search_clicks",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.89
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_google_search_clicks": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct search_gclid)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "search_utm_medium": {
+          "display_name": "Search UTM Medium",
+          "id": "6cd488f3-fd79-4b60-a0c4-436cfd7c5c8f",
+          "name": "search_utm_medium",
+          "parent_dim_name": null
+        },
+        "search_utm_source": {
+          "display_name": "Search UTM Source",
+          "id": "bc314d95-f404-47b8-b0ea-6b681ac3766d",
+          "name": "search_utm_source",
+          "parent_dim_name": "search_utm_medium"
+        }
+      },
+      "display_name": "Total Google Search Clicks",
+      "id": "495f5f6d-4f98-4137-82c7-0cb992bae330",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_google_search_clicks",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.58
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_home_page_views": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when length(page_path)=1 or  regexp_like(page_path , '^.*(en-|-en|shop).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Home Page Views",
+      "id": "5f58208a-f5cf-4225-aa53-740412db3262",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_home_page_views",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.07
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_initiatecheckout": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'InitiateCheckout' and regexp_like(page, '^.*(information).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Initiated Checkout",
+      "id": "7ffb412a-840e-41ef-8d22-50c02b909da5",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_initiatecheckout",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.73
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_login_page_views": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'PageView' and regexp_like(page_path , '^.*(account|login|register|reset|activate).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Login Page Views",
+      "id": "3b48fcf9-175e-477d-b3fb-da179be8378b",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_login_page_views",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.07
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_orders": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct (case when event_name in ('Purchase') then data_order_id else null end))",
+      "dimensions": {
+        "country_name": {
+          "display_name": "Country",
+          "id": "3fe9731f-db90-47fd-8470-1cbae3f55ae6",
+          "name": "country_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "state": {
+          "display_name": "State",
+          "id": "670230de-8e32-4b21-96b2-0032e3488bda",
+          "name": "state",
+          "parent_dim_name": "country_name"
+        }
+      },
+      "display_name": "Total Orders",
+      "id": "ff8811ca-f4c9-4b3f-85c4-9e1d8a86593a",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_orders",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.73
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_page_views": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'PageView' then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Page Views",
+      "id": "627c38c9-629e-407d-a0e1-1fdcd95c5b02",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_page_views",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.07
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_pdp_views": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'ViewContent' then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total PDP Views",
+      "id": "cfacc416-5077-436c-a786-09560436c015",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_pdp_views",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.58
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_ppc_clicks": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when referrer_by_type in ('ppc') then coalesce(search_fbclid,search_gclid,clickid) else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "search_utm_medium": {
+          "display_name": "Search UTM Medium",
+          "id": "6cd488f3-fd79-4b60-a0c4-436cfd7c5c8f",
+          "name": "search_utm_medium",
+          "parent_dim_name": null
+        },
+        "search_utm_source": {
+          "display_name": "Search UTM Source",
+          "id": "bc314d95-f404-47b8-b0ea-6b681ac3766d",
+          "name": "search_utm_source",
+          "parent_dim_name": "search_utm_medium"
+        }
+      },
+      "display_name": "Total PPC Clicks",
+      "id": "6b4d4d48-803c-4d9b-ab7b-a27dd35ac08f",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_ppc_clicks",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.82
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_search_page_views": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'PageView' and regexp_like(page, '^.*(search|searches).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Product Search Page Views",
+      "id": "d5f69f37-a716-4db8-8442-6f504fcc1dbc",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_search_page_views",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.07
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_session": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct session_id)",
+      "dimensions": {
+        "country_name": {
+          "display_name": "Country",
+          "id": "3fe9731f-db90-47fd-8470-1cbae3f55ae6",
+          "name": "country_name",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "state": {
+          "display_name": "State",
+          "id": "670230de-8e32-4b21-96b2-0032e3488bda",
+          "name": "state",
+          "parent_dim_name": "country_name"
+        }
+      },
+      "display_name": "Total Session",
+      "id": "280939eb-a36e-4e3a-9ed8-2676d5a9cab4",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_session",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.58
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_signups": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when event_name = 'CompleteRegistration' and regexp_like(page_path , '^.*(account|register).*') then page else null end)",
+      "dimensions": {
+        "device_manufacturer": {
+          "display_name": "Device Manufacturer",
+          "id": "09c30e17-c881-4645-8e22-ad6c4d1cf3d7",
+          "name": "device_manufacturer",
+          "parent_dim_name": "device_platform"
+        },
+        "device_platform": {
+          "display_name": "Device Platform",
+          "id": "48438507-b308-4933-838c-045e6d5c825d",
+          "name": "device_platform",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "page_title": {
+          "display_name": "Page Title",
+          "id": "9d77f7b1-6f79-46ee-a76d-9383e4185e73",
+          "name": "page_title",
+          "parent_dim_name": "page_path"
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        }
+      },
+      "display_name": "Total Sign-Ups",
+      "id": "c38eb24b-76e0-4030-b96a-e21428373525",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_signups",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.07
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_users": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct user_id)",
+      "dimensions": {
+        "country_name": {
+          "display_name": "Country",
+          "id": "3fe9731f-db90-47fd-8470-1cbae3f55ae6",
+          "name": "country_name",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "state": {
+          "display_name": "State",
+          "id": "670230de-8e32-4b21-96b2-0032e3488bda",
+          "name": "state",
+          "parent_dim_name": "country_name"
+        }
+      },
+      "display_name": "Total Users",
+      "id": "9e8b7905-ae89-4f27-bacd-bcbd3bf87ad4",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_users",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 2.48
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    },
+    "total_visits_from_ads": {
+      "accent": "positive",
+      "aggregation_operation": "count(distinct case when ad_id is not null or referrer_by_category in ('Ad Campaigns') then session_id end)",
+      "dimensions": {
+        "country_name": {
+          "display_name": "Country",
+          "id": "3fe9731f-db90-47fd-8470-1cbae3f55ae6",
+          "name": "country_name",
+          "parent_dim_name": null
+        },
+        "event_name": {
+          "display_name": "Event Name",
+          "id": "64a57ac3-17ba-4b30-9fa1-f2e0bce70687",
+          "name": "event_name",
+          "parent_dim_name": null
+        },
+        "global_retention_type": {
+          "display_name": "Customer Retention Type",
+          "id": "0d3f11c6-d642-40d6-a527-5d1e70a12ed1",
+          "name": "global_retention_type",
+          "parent_dim_name": null
+        },
+        "referrer_by_category": {
+          "display_name": "Referrer By Category",
+          "id": "ed32d17a-3a9d-48b6-9dbf-b3a00670632a",
+          "name": "referrer_by_category",
+          "parent_dim_name": null
+        },
+        "referrer_by_type": {
+          "display_name": "Referrer By Type",
+          "id": "66238b23-4cf5-4bcb-bf07-c14ca4536ccb",
+          "name": "referrer_by_type",
+          "parent_dim_name": "referrer_by_category"
+        },
+        "state": {
+          "display_name": "State",
+          "id": "670230de-8e32-4b21-96b2-0032e3488bda",
+          "name": "state",
+          "parent_dim_name": "country_name"
+        }
+      },
+      "display_name": "Total Visits from Ads",
+      "id": "2389f450-cb63-499e-b02f-7a171a5570da",
+      "is_derived": true,
+      "kpi_format": null,
+      "name": "total_visits_from_ads",
+      "operations": {
+        "changepoint_dynamic": {
+          "enabled": true
+        },
+        "clip_negative_forecast": {
+          "enabled": true
+        },
+        "drop_incomplete_periods": {
+          "enabled": true
+        },
+        "holiday_treatment": {
+          "enabled": true,
+          "holiday_delta_day": 2,
+          "holiday_list": null,
+          "overlapping_holiday_check": false
+        },
+        "lag_data": {
+          "enabled": false,
+          "lags": [
+            1,
+            7
+          ],
+          "lags_mode": "additive",
+          "lags_prior_scale": 0.05
+        },
+        "mask_zero": {
+          "enabled": true
+        },
+        "model_holidays": {
+          "enabled": true,
+          "holiday_lower_window": -2,
+          "holiday_upper_window": 2
+        },
+        "outlier_removal": {
+          "enabled": true
+        },
+        "sigma": {
+          "enabled": true,
+          "threshold": 1.89
+        },
+        "sparse_filter": {
+          "avg_non_zero_value": 30,
+          "enabled": true,
+          "mean_pct_zero": 30,
+          "no_of_bins": 10
+        },
+        "transform_data": {
+          "enabled": true,
+          "transform_params.lambda": 2.5,
+          "transform_type": "sqrt"
+        }
+      },
+      "patterns": {
+        "spike": {
+          "auto_zoom_flag": false,
+          "bars_on_chart_threshold": 5,
+          "drill_down_threshold": 0.02,
+          "hotspot_p_val_threshold": 0.05,
+          "max_hotspots_graphed": 5,
+          "mdh_contribution_threshold": 0.3,
+          "mdh_dimensions_level": 3,
+          "mdh_hotspot": false,
+          "mdh_primary_threshold": 0.3,
+          "suppress_consecutive_anomaly": true,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "udh_primary_threshold": 0.2,
+          "zoom_flag": true
+        },
+        "trend": {
+          "auto_zoom_flag": false,
+          "suppress_trend_if_older_than": 30,
+          "trend_sensitivity.changepoints_threshold": 0.5,
+          "trend_sensitivity.selector_criteria.max_grid_width": 1.0,
+          "trend_sensitivity.selector_criteria.min_grid_width": 0.8,
+          "trend_sensitivity.selector_criteria.trend_delta_filter": 1.5,
+          "trend_sensitivity.trend_post_period_in_days": 14.0,
+          "trend_sensitivity.trend_pre_period_in_days": 28.0,
+          "trend_sensitivity.trend_pval_threshold": 0.05,
+          "zoom_flag": true
+        }
+      },
+      "prophet": {
+        "changepoint_prior_scale": 1.0,
+        "changepoint_range": 1.0,
+        "holidays_prior_scale": 1.0,
+        "seasonality_prior_scale": 1.0,
+        "uncertainty_samples": 1000
+      },
+      "type": "cumulative"
+    }
+  },
+  "pipeline_id": "trueclassic_trueclassic_blotout_kpi_set1_d",
+  "pipeline_tag": "trueclassic_blotout_kpi_set1",
+  "process_cause": false,
+  "publish_level": "AllPatterns",
+  "raw_file_name": "trueclassic.parquet",
+  "smart_split_by": false,
+  "split_by_dimensions": null,
+  "start_timestamp": null,
+  "title": "Daily Insights for KPI Set 1 in Blotout for TrueClassic",
+  "config_source": "mml"
+}
