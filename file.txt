@@ -1,0 +1,864 @@
+from flask import Flask, render_template, request, redirect, session, url_for
+import pyodbc
+import pandas as pd
+import plotly.express as px
+import plotly
+import plotly.graph_objects as go
+from datetime import datetime
+from datetime import datetime, timedelta
+import json
+ 
+app = Flask(__name__)
+app.secret_key = "MES@123"
+ 
+# SQL Connection
+def get_connection():
+ 
+    return pyodbc.connect(
+        "DRIVER={SQL Server};"
+        "SERVER=10.105.17.60;"
+        "DATABASE=apriso;"
+        "UID=FlxReader;"
+        "PWD=FlxReader@#123;"
+        "Encrypt=no;"
+    )
+ 
+# ---------------------------------
+# Login
+# ---------------------------------
+ 
+ 
+def login():
+ 
+    if request.method == "POST":
+ 
+        username = request.form["username"]
+        password = request.form["password"]
+ 
+        if username == "admin" and password == "admin123":
+ 
+            session["user"] = username
+            return redirect("/dashboard")
+ 
+        else:
+            return render_template(
+                "login.html",
+                error="Invalid Username / Password"
+            )
+ 
+    return render_template("login.html")
+ 
+# ---------------------------------
+# Dashboard
+# ---------------------------------
+ 
+def show_query(query, params):
+    sql = query
+ 
+    for p in params:
+ 
+        if isinstance(p, datetime):
+            value = f"'{p.strftime('%Y-%m-%d %H:%M:%S')}'"
+        else:
+            value = f"'{p}'"
+ 
+        sql = sql.replace("?", value, 1)
+ 
+    print("\nFINAL SQL:")
+    print(sql)
+    print("-" * 100)
+ 
+ 
+ 
+@app.route("/", methods=["GET","POST"])
+def dashboard():
+ 
+ 
+    from_date = request.form.get("from_date")
+    to_date = request.form.get("to_date")
+ 
+     
+    shift = request.form.get("shift")
+    variant = request.form.get("variant")
+    machine = request.form.get("machine")
+ 
+    p_variant_map = {
+        "Matrix": "P00",
+        "Banana Mini": "P01",
+        "Kiwi Mini": "P02"
+    }
+ 
+    q_variant_map = {
+        "Matrix": "Q00",
+        "Banana Mini": "Q01",
+        "Kiwi Mini": "Q02"
+    }
+ 
+    graph_json = None
+ 
+    if from_date:
+ 
+        if shift == "A":
+ 
+            from_datetime = datetime.strptime(
+                f"{from_date} 06:30",
+                "%Y-%m-%d %H:%M"
+            )
+ 
+            to_datetime = datetime.strptime(
+                f"{from_date} 18:30",
+                "%Y-%m-%d %H:%M"
+            )
+ 
+        elif shift == "B":
+ 
+            from_datetime = datetime.strptime(
+                f"{from_date} 18:30",
+                "%Y-%m-%d %H:%M"
+            )
+ 
+            to_datetime = (
+                datetime.strptime(
+                    f"{from_date} 06:30",
+                    "%Y-%m-%d %H:%M"
+                )
+                + timedelta(days=1)
+            )
+ 
+        else:
+ 
+            from_datetime = datetime.strptime(
+                f"{from_date} 00:00",
+                "%Y-%m-%d %H:%M"
+            )
+ 
+            to_datetime = datetime.strptime(
+                f"{to_date} 23:59",
+                "%Y-%m-%d %H:%M"
+            )
+ 
+        # IST -> UTC Conversion
+ 
+        from_datetime_utc = (
+            from_datetime
+            - timedelta(hours=5, minutes=30)
+        )
+ 
+        to_datetime_utc = (
+            to_datetime
+            - timedelta(hours=5, minutes=30)
+        )
+ 
+        if variant == "Matrix":
+            alt_process_name = "ALT1"
+            qalt_process_name = "QALT1"
+            qslgl_wc = "SLGL_IP"
+            Qtstl_wc = "TSTL"
+            op30_wc = "%OP-30%"
+            op40_wc = "%OP-40%"
+            op50_wc = "%OP-50%"
+ 
+        else:  # Banana Mini / Kiwi Mini
+            alt_process_name = "LM"
+            qalt_process_name = "QRSHP"
+            qslgl_wc = "SLGL_2"
+            Qtstl_wc = "TSTL_2"
+            op30_wc = "%B-OP30%"
+            op40_wc = "%B-OP40%"
+            op50_wc = "%B-OP50_60%"
+           
+ 
+ 
+         
+ 
+ 
+        machine_queries = {
+ 
+    "UC01": """
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_Ultrasonic1process
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND Parts = 'M4ACN0111M00' AND WipOrderNo LIKE ?
+    """,
+ 
+    "SPFL": """
+    SELECT
+        isnull(sum(PartQuantity),0) as OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_SprayFluxingProcess
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND UndoFlag = 0
+      AND Parts = 'M4ACN0111M00' AND WipOrderNo LIKE ?
+    """,
+ 
+    "LW01":"""
+        ;WITH EquipMap AS (
+    SELECT W.WorkCenter,
+           UC.Attribute_ AS EquipmentName
+    FROM WORK_CENTER W
+    JOIN UNIT_CHARACTERISTIC UC
+        ON UC.UnitID = W.UnitID
+       AND UC.Characteristic = 'OutputStation'
+    WHERE W.WorkCenter = 'LW01'
+    )
+ 
+    SELECT
+        ISNULL(SUM(1),0) AS OKQty,
+        0 AS NOKQty
+    FROM AT_LaserWeldingPLCData cp
+    JOIN EQUIPMENT E
+        ON E.ID = cp.EquipmentID
+    JOIN EquipMap em
+        ON em.WorkCenter = 'LW01'
+    AND E.Equipment = em.EquipmentName
+    WHERE cp.CreatedOn BETWEEN ? AND ?
+    """,
+ 
+    "LW02":"""
+        ;WITH EquipMap AS (
+        SELECT W.WorkCenter,
+            UC.Attribute_ AS EquipmentName
+        FROM WORK_CENTER W
+        JOIN UNIT_CHARACTERISTIC UC
+            ON UC.UnitID = W.UnitID
+        AND UC.Characteristic = 'OutputStation'
+        WHERE W.WorkCenter = 'LW02'
+    )
+ 
+    SELECT
+        ISNULL(SUM(1),0) AS OKQty,
+        0 AS NOKQty
+    FROM AT_LaserWeldingPLCData cp
+    JOIN EQUIPMENT E
+        ON E.ID = cp.EquipmentID
+    JOIN EquipMap em
+        ON em.WorkCenter = 'LW02'
+    AND E.Equipment = em.EquipmentName
+    WHERE cp.CreatedOn BETWEEN ? AND ?
+    """,
+ 
+    "LW03":"""
+        ;WITH EquipMap AS (
+        SELECT W.WorkCenter,
+            UC.Attribute_ AS EquipmentName
+        FROM WORK_CENTER W
+        JOIN UNIT_CHARACTERISTIC UC
+            ON UC.UnitID = W.UnitID
+        AND UC.Characteristic = 'OutputStation'
+        WHERE W.WorkCenter = 'LW03'
+    )
+ 
+    SELECT
+        ISNULL(SUM(1),0) AS OKQty,
+        0 AS NOKQty
+    FROM AT_LaserWeldingPLCData cp
+    JOIN EQUIPMENT E
+        ON E.ID = cp.EquipmentID
+    JOIN EquipMap em
+        ON em.WorkCenter = 'LW03'
+    AND E.Equipment = em.EquipmentName
+    WHERE cp.CreatedOn BETWEEN ? AND ?
+    """,
+ 
+    "QLW01":"""
+       ;WITH ScrapQty AS (
+    SELECT ISNULL(SUM(QS.Quantity),0) AS ScrapQty
+    FROM AT_QUALITY_SAMPLE QS
+    WHERE QS.WorkCenter = 'LW01'
+      AND QS.Status IN ('Scrap','Rework')
+      AND QS.CreatedOn BETWEEN ? AND ?
+    ),
+    ProdQty AS (
+        SELECT ISNULL(SUM(1),0) AS ProdQty
+        FROM AT_LaserWeldingPLCData cp
+        JOIN EQUIPMENT E ON E.ID = cp.EquipmentID
+        JOIN (
+            SELECT UC.Attribute_ AS EquipmentName
+            FROM WORK_CENTER W
+            JOIN UNIT_CHARACTERISTIC UC
+                ON UC.UnitID = W.UnitID
+            WHERE W.WorkCenter = 'LW01'
+            AND UC.Characteristic = 'OutputStation'
+        ) em
+            ON E.Equipment = em.EquipmentName
+        WHERE cp.CreatedOn BETWEEN ? AND ?
+    )
+    SELECT
+        ProdQty - ScrapQty AS OKQty,
+        ScrapQty AS NOKQty
+    FROM ProdQty, ScrapQty
+    """,
+ 
+    "QLW02":"""
+           ;WITH ScrapQty AS (
+        SELECT ISNULL(SUM(QS.Quantity),0) AS ScrapQty
+        FROM AT_QUALITY_SAMPLE QS
+        WHERE QS.WorkCenter = 'LW02'
+          AND QS.Status IN ('Scrap','Rework')
+          AND QS.CreatedOn BETWEEN ? AND ?
+        ),
+        ProdQty AS (
+            SELECT ISNULL(SUM(1),0) AS ProdQty
+            FROM AT_LaserWeldingPLCData cp
+            JOIN EQUIPMENT E ON E.ID = cp.EquipmentID
+            JOIN (
+                SELECT UC.Attribute_ AS EquipmentName
+                FROM WORK_CENTER W
+                JOIN UNIT_CHARACTERISTIC UC
+                    ON UC.UnitID = W.UnitID
+                WHERE W.WorkCenter = 'LW02'
+                AND UC.Characteristic = 'OutputStation'
+            ) em
+                ON E.Equipment = em.EquipmentName
+            WHERE cp.CreatedOn BETWEEN ? AND ?
+        )
+        SELECT
+            ProdQty - ScrapQty AS OKQty,
+            ScrapQty AS NOKQty
+        FROM ProdQty, ScrapQty
+        """,
+ 
+    "QLW03":"""
+           ;WITH ScrapQty AS (
+        SELECT ISNULL(SUM(QS.Quantity),0) AS ScrapQty
+        FROM AT_QUALITY_SAMPLE QS
+        WHERE QS.WorkCenter = 'LW03'
+          AND QS.Status IN ('Scrap','Rework')
+          AND QS.CreatedOn BETWEEN ? AND ?
+        ),
+        ProdQty AS (
+            SELECT ISNULL(SUM(1),0) AS ProdQty
+            FROM AT_LaserWeldingPLCData cp
+            JOIN EQUIPMENT E ON E.ID = cp.EquipmentID
+            JOIN (
+                SELECT UC.Attribute_ AS EquipmentName
+                FROM WORK_CENTER W
+                JOIN UNIT_CHARACTERISTIC UC
+                    ON UC.UnitID = W.UnitID
+                WHERE W.WorkCenter = 'LW03'
+                AND UC.Characteristic = 'OutputStation'
+            ) em
+                ON E.Equipment = em.EquipmentName
+            WHERE cp.CreatedOn BETWEEN ? AND ?
+        )
+        SELECT
+            ProdQty - ScrapQty AS OKQty,
+            ScrapQty AS NOKQty
+        FROM ProdQty, ScrapQty
+        """,
+ 
+    "RSHP": """
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_Reshapingprocess
+    WHERE CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+    """,
+ 
+    "CLNC": """
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_Clinchingprocess
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "SHBL": """
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_ShotBlastingprocess
+    WHERE CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+    """,
+ 
+    alt_process_name: """
+    SELECT
+        ISNULL(SUM(CASE WHEN IsRejected = 0 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_ALT1_Process
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND OutputScan = 1
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "BRZN": """
+    SELECT
+        ISNULL(SUM(PartQuantity), 0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_BrazingProcess
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND OutputScan = 1
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "OP10": """
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_VMC1Process
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND WorkCenter LIKE '%OP-10%'
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "OP20": """
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_VMC1Process
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND WorkCenter LIKE '%OP-20%'
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "SLGL": """
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_ColdPlateLoadingProcess
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "OP30": f"""
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_VMC2Process
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND WorkCenter LIKE '{op30_wc}'
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "OP40": f"""
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_VMC2Process
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND WorkCenter LIKE '{op40_wc}'
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "OP50": f"""
+    SELECT
+        ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_VMC2Process
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND WorkCenter LIKE '{op50_wc}' and BinNo = 'OP-50_OP'
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+ 
+    "OP60": f"""
+        SELECT
+            ISNULL(SUM(CASE WHEN OutputScan = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+            ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+        FROM AT_VMC2Process
+        WHERE CreatedOn BETWEEN ? AND ?
+          AND WorkCenter LIKE '{op50_wc}' and BinNo = 'OP-60_OP'
+          AND Active = 1 AND WipOrderNo LIKE ?
+        """,
+ 
+    "UC02": """
+    SELECT
+        ISNULL(SUM(CASE WHEN Active = 1 THEN PartQuantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN IsRejected = 1 THEN PartQuantity ELSE 0 END),0) AS NOKQty
+    FROM AT_Ultrasonic2process
+    WHERE CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+    """,
+ 
+    "EOL": """
+    SELECT
+        ISNULL(COUNT(CASE WHEN LM2SerialNumber IS NOT NULL THEN 1 END),0) AS OKQty,
+        ISNULL(COUNT(CASE WHEN IsRejection = 1 THEN 1 END),0) AS NOKQty
+    FROM AT_TestingLineProcess
+    WHERE CreatedOn BETWEEN ? AND ?
+      AND Active = 1 AND WipOrderNo LIKE ?
+    """,
+    "QEOL": f"""
+        SELECT
+            ISNULL(SUM(CASE WHEN Status='QAOK' THEN Quantity ELSE 0 END),0) AS OKQty,
+            ISNULL(SUM(CASE WHEN Status='Scrap' THEN Quantity ELSE 0 END),0) AS NOKQty
+        FROM AT_QUALITY_SAMPLE
+        WHERE WorkCenter LIKE '{Qtstl_wc}'
+          AND CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+        """,
+ 
+ 
+    "PACK": f"""
+    SELECT
+        ISNULL(COUNT(CASE WHEN Active = 1 THEN 1 END),0) AS OKQty,
+        ISNULL(COUNT(CASE WHEN IsRejection = 1 THEN 1 END),0) AS NOKQty
+    FROM AT_PackagingProcess
+    WHERE CreatedOn BETWEEN ? AND ? AND   Variant = ?
+    """,
+ 
+    qalt_process_name: """
+    SELECT
+        ISNULL(SUM(CASE WHEN Status='QAOK' THEN Quantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN Status='Scrap' THEN Quantity ELSE 0 END),0) AS NOKQty
+    FROM AT_QUALITY_SAMPLE
+    WHERE WorkCenter LIKE 'ALT1%'
+      AND CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+    """,
+ 
+    "QVMC1": """
+    SELECT
+        ISNULL(SUM(CASE WHEN Status='QAOK' THEN Quantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN Status='Scrap' THEN Quantity ELSE 0 END),0) AS NOKQty
+    FROM AT_QUALITY_SAMPLE
+    WHERE WorkCenter='VMC1'
+      AND CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+    """,
+ 
+    "QVMC2": """
+    SELECT
+        ISNULL(SUM(CASE WHEN Status='QAOK' THEN Quantity ELSE 0 END),0) AS OKQty,
+        ISNULL(SUM(CASE WHEN Status='Scrap' THEN Quantity ELSE 0 END),0) AS NOKQty
+    FROM AT_QUALITY_SAMPLE
+    WHERE WorkCenter='VMC2'
+        AND CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+    """,
+    "QSLGL": f"""
+        SELECT
+            ISNULL(SUM(CASE WHEN Status='QAOK' THEN Quantity ELSE 0 END),0) AS OKQty,
+            ISNULL(SUM(CASE WHEN Status='Scrap' THEN Quantity ELSE 0 END),0) AS NOKQty
+        FROM AT_QUALITY_SAMPLE
+        WHERE WorkCenter='{qslgl_wc}'
+            AND CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+        """,
+    "QUC02": """
+        SELECT
+            ISNULL(SUM(CASE WHEN Status='QAOK' THEN Quantity ELSE 0 END),0) AS OKQty,
+            ISNULL(SUM(CASE WHEN Status='Scrap' THEN Quantity ELSE 0 END),0) AS NOKQty
+        FROM AT_QUALITY_SAMPLE
+        WHERE WorkCenter='UC02_IP'
+            AND CreatedOn BETWEEN ? AND ? AND WipOrderNo LIKE ?
+        """,
+        "REVT":"""
+        SELECT
+        ISNULL(COUNT(*),0) AS OKQty,
+        0 As NOKQty
+        FROM AT_RivetingProcess
+        WHERE CreatedOn BETWEEN ? AND ?
+        AND OUtputScan = 1
+        AND Active = 1
+        AND WiPOrderNo LIKE ?
+        """
+ 
+        }
+ 
+        conn = get_connection()
+ 
+        results = []
+ 
+        for process, query in machine_queries.items():
+ 
+            cursor = conn.cursor()
+ 
+            if variant in ["Banana Mini", "Kiwi Mini"] and process in [
+                "LW01",
+                "LW02",
+                "LW03",
+                "QLW01",
+                "QLW02",
+                "QLW03"
+            ]:
+ 
+                results.append({
+                    "ProcessName": process,
+                    "OKQty": 0,
+                    "NOKQty": 0
+                })
+ 
+                continue
+ 
+            q_processes = [
+                "SLGL",
+                "QSLGL",
+                "OP30",
+                "OP40",
+                "OP50",
+                "OP60",
+                "REVT",
+                "QVMC2",
+                "UC02",
+                "QUC02",
+                "EOL",
+                "QEOL",
+                "PACK"
+            ]
+ 
+            if process in q_processes:
+                wip_filter = q_variant_map.get(variant)
+            else:
+                wip_filter = p_variant_map.get(variant)
+ 
+            if process in ["QLW01", "QLW02", "QLW03"]:
+ 
+                cursor.execute(
+                    query,
+                    (
+                       
+                        from_datetime_utc,
+                        to_datetime_utc,
+                        from_datetime_utc,
+                        to_datetime_utc
+                   
+                    )
+                )
+ 
+            elif process in ["LW01", "LW02", "LW03"]:
+ 
+                cursor.execute(
+                    query,
+                    (
+                        from_datetime_utc,
+                        to_datetime_utc
+                    )
+                )
+ 
+            elif process == "PACK":
+                cursor.execute(
+                query,
+                    (
+                        from_datetime_utc,
+                        to_datetime_utc,
+                        variant
+                    )
+                )
+ 
+            else:
+                params = (
+                    from_datetime_utc,
+                    to_datetime_utc,
+                    f"%{wip_filter}%"
+                    )
+ 
+               
+ 
+                cursor.execute(
+                    query,
+                    (
+                        from_datetime_utc,
+                        to_datetime_utc,
+                        f"%{wip_filter}%"
+                    )
+                )
+                #show_query(query, params)
+ 
+ 
+            row = cursor.fetchone()
+ 
+            ok_qty = row[0] if row and row[0] is not None else 0
+            nok_qty = row[1] if row and row[1] is not None else 0
+ 
+            results.append({
+                "ProcessName": process,
+                "OKQty": ok_qty,
+                "NOKQty": nok_qty
+            })
+ 
+ 
+        df = pd.DataFrame(results)
+        df["TotalQty"] = df["OKQty"] + df["NOKQty"]
+ 
+ 
+        if variant == "Matrix":
+ 
+            process_order = [
+                'UC01',
+                'SPFL',
+                'LW01',
+                'QLW01',
+                'CLNC',
+                'LW02',
+                'QLW02',
+                'LW03',
+                'QLW03',
+                'BRZN',
+                'SHBL',
+                'RSHP',
+                'ALT1',
+                'QALT1',
+                'OP10',
+                'OP20',
+                'QVMC1',
+                'SLGL',
+                'QSLGL',
+                'OP30',
+                'OP40',
+                'OP50',
+                'QVMC2',
+                'UC02',
+                'QUC02',
+                'EOL',
+                'QEOL',
+                'PACK'
+            ]
+ 
+        elif variant == "Banana Mini":
+ 
+            process_order = [
+                'UC01',
+                'SPFL',
+                'LW01',
+                'CLNC',
+                'LW02',
+                'LW03',
+                'BRZN',
+                'SHBL',
+                'LM',
+                'RSHP',
+                'QRSHP',
+                'OP10',
+                'OP20',
+                'QVMC1',
+                'SLGL',
+                'QSLGL',
+                'OP30',
+                'OP40',
+                'OP50',
+                'OP60',
+                'QVMC2',
+                'UC02',
+                'QUC02',
+                'EOL',
+                'QEOL',
+                'PACK'
+            ]
+ 
+        elif variant == "Kiwi Mini":
+ 
+            process_order = [
+                'UC01',
+                'SPFL',
+                'LW01',
+                'CLNC',
+                'LW02',
+                'LW03',
+                'BRZN',
+                'SHBL',
+                'LM',
+                'RSHP',
+                'QRSHP',
+                'OP10',
+                'OP20',
+                'QVMC1',
+                'SLGL',
+                'QSLGL',
+                'OP30',
+                'OP40',
+                'OP50',
+                'OP60',
+                'REVT',
+                'QVMC2',
+                'UC02',
+                'QUC02',
+                'EOL',
+                'QEOL',
+                'PACK'
+            ]
+ 
+        df['ProcessName'] = pd.Categorical(
+            df['ProcessName'],
+            categories=process_order,
+            ordered=True
+        )
+ 
+        df = df.sort_values('ProcessName')
+ 
+        fig = go.Figure()
+ 
+        # OK Qty (Green)
+        fig = go.Figure()
+ 
+        # Green bar for OK Qty
+        fig.add_trace(
+            go.Bar(
+                x=df["ProcessName"],
+                y=df["OKQty"],
+                marker_color="#00ff00",
+                text=df["OKQty"],
+                textposition="outside",
+                textfont=dict(
+                    color="white",
+                    size=12
+                ),
+                name="OK"
+            )
+        )
+ 
+        # NOK values below x-axis
+        for _, row in df.iterrows():
+ 
+            if row["OKQty"] == 0 and row["NOKQty"] == 0:
+                continue
+ 
+            fig.add_annotation(
+                x=row["ProcessName"],
+                y=max(row["OKQty"] * 0.08, 5),
+                text=str(row["NOKQty"]),
+                showarrow=False,
+                font=dict(
+                    color="red",
+                    size=13
+                )
+            )
+ 
+        fig.update_layout(
+ 
+            paper_bgcolor="#0c1f38",
+            plot_bgcolor="#0c1f38",
+ 
+            font=dict(color="white"),
+ 
+            height=700,
+ 
+            showlegend=False,
+ 
+            xaxis=dict(
+                title="PROCESS",
+                showgrid=False
+            ),
+ 
+            yaxis=dict(
+            title="COUNT",
+            gridcolor="gray",
+            rangemode="tozero"
+        )
+        )
+        graph_json = json.dumps(
+            fig,
+            cls=plotly.utils.PlotlyJSONEncoder
+        )
+ 
+    return render_template(
+        "dashboard.html",
+        graph_json=graph_json,
+        from_date=from_date,
+        to_date=to_date,
+        shift=shift,
+        variant=variant
+    )
+# ---------------------------------
+ 
+@app.route("/logout")
+def logout():
+ 
+    session.clear()
+    return redirect("/")
+ 
+# ---------------------------------
+ 
+if __name__ == "__main__":
+    app.run(
+        debug=True,
+        host="0.0.0.0",
+        port=8510
+    )
+ 
